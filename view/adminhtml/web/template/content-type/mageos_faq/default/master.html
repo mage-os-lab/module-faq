@@ -1,6 +1,6 @@
 <!--
-    FAQ content type — master (storefront) template.
-    Renders an empty placeholder div with data attributes; the server-side
-    FaqRenderer plugin replaces it with the FaqList widget output.
+    FAQ content type — master (storefront) template, as core's Block content type's.
+    The element's html is a {{widget}} directive for MageOS\Faq\Block\Widget\FaqList, which core's
+    widget filter renders on the storefront.
 -->
-<div attr="data.main.attributes" ko-style="data.main.style" css="data.main.css"></div>
+<div html="data.main.html" attr="data.main.attributes" css="data.main.css" ko-style="data.main.style"></div>

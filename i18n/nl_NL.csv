@@ -20,6 +20,7 @@ Edit,Bewerken
 FAQ,FAQ
 Group:,Groep:
 "Open settings to choose a FAQ group identifier.","Open de instellingen om een FAQ-groepsidentificatie te kiezen."
+"Leave out %1: the FAQ widget directive cannot carry them.","Laat %1 weg: de FAQ-widgetinstructie kan ze niet bevatten."
 "FAQ Manager",FAQ-beheer
 "SEO FAQ List","SEO FAQ-lijst"
 "Renders a FAQ group as an accordion and adds matching FAQPage structured data.","Toont een FAQ-groep als accordeon en voegt bijbehorende gestructureerde gegevens (FAQPage) toe."
@@ -38,4 +39,5 @@ Answer,Antwoord
 Active,Actief
 ID,ID
 "FAQ Settings",FAQ-instellingen
-"The group identifier of the FAQ entries to display (e.g. shipping).","De groepsidentificatie van de FAQ's die je wilt tonen (bijv. shipping)."
+"The group identifier of the FAQ entries to display (e.g. shipping). Can't contain "" { } or \.","De groepsidentificatie van de FAQ's die je wilt tonen (bijv. shipping). Mag geen "" { } of \ bevatten."
+"Shown above the questions. Can't contain "" { } or \, which the widget directive Page Builder stores cannot carry.","Staat boven de vragen. Mag geen "" { } of \ bevatten: de widgetinstructie die Page Builder opslaat, kan die niet bevatten."

@@ -58,9 +58,10 @@
                 <label translate="true">FAQ Group Identifier</label>
                 <dataScope>identifier</dataScope>
                 <dataType>text</dataType>
-                <notice translate="true">The group identifier of the FAQ entries to display (e.g. shipping).</notice>
+                <notice translate="true">The group identifier of the FAQ entries to display (e.g. shipping). Can't contain " { } or \.</notice>
                 <validation>
                     <rule name="required-entry" xsi:type="boolean">true</rule>
+                    <rule name="mageos-faq-directive-safe" xsi:type="boolean">true</rule>
                 </validation>
             </settings>
         </field>
@@ -70,6 +71,10 @@
                 <label translate="true">Heading (optional)</label>
                 <dataScope>heading</dataScope>
                 <dataType>text</dataType>
+                <notice translate="true">Shown above the questions. Can't contain " { } or \, which the widget directive Page Builder stores cannot carry.</notice>
+                <validation>
+                    <rule name="mageos-faq-directive-safe" xsi:type="boolean">true</rule>
+                </validation>
             </settings>
         </field>
     </fieldset>

@@ -18,7 +18,6 @@
             <directory>Block</directory>
             <directory>Controller</directory>
             <directory>Model</directory>
-            <directory>Plugin</directory>
             <directory>Ui</directory>
         </include>
     </source>

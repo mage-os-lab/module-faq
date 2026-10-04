@@ -12,7 +12,6 @@
     <file>Block</file>
     <file>Controller</file>
     <file>Model</file>
-    <file>Plugin</file>
     <file>Ui</file>
     <file>Test</file>
 </ruleset>

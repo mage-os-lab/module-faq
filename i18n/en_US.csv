@@ -20,6 +20,7 @@ Edit,Edit
 FAQ,FAQ
 Group:,Group:
 "Open settings to choose a FAQ group identifier.","Open settings to choose a FAQ group identifier."
+"Leave out %1: the FAQ widget directive cannot carry them.","Leave out %1: the FAQ widget directive cannot carry them."
 "FAQ Manager","FAQ Manager"
 "SEO FAQ List","SEO FAQ List"
 "Renders a FAQ group as an accordion and adds matching FAQPage structured data.","Renders a FAQ group as an accordion and adds matching FAQPage structured data."
@@ -38,4 +39,5 @@ Answer,Answer
 Active,Active
 ID,ID
 "FAQ Settings","FAQ Settings"
-"The group identifier of the FAQ entries to display (e.g. shipping).","The group identifier of the FAQ entries to display (e.g. shipping)."
+"The group identifier of the FAQ entries to display (e.g. shipping). Can't contain "" { } or \.","The group identifier of the FAQ entries to display (e.g. shipping). Can't contain "" { } or \."
+"Shown above the questions. Can't contain "" { } or \, which the widget directive Page Builder stores cannot carry.","Shown above the questions. Can't contain "" { } or \, which the widget directive Page Builder stores cannot carry."

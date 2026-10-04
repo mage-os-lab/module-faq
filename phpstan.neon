@@ -10,7 +10,6 @@ parameters:
         - Block
         - Controller
         - Model
-        - Plugin
         - Ui
         - Test
     treatPhpDocTypesAsCertain: false

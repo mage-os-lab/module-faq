@@ -32,12 +32,24 @@
 
                         <attribute name="name" source="data-content-type"/>
                         <attribute name="appearance" source="data-appearance"/>
+                        <!--
+                            The {{widget}} directive the storefront renders; on the stage, the group
+                            identifier instead (preview converter).
+                        -->
+                        <html name="html"
+                              preview_converter="MageOS_Faq/js/content-type/mageos_faq/converter/preview/group"/>
                         <css name="css_classes"/>
-
-                        <attribute name="identifier" source="data-identifier"/>
-                        <attribute name="heading" source="data-heading"/>
                     </element>
                 </elements>
+                <converters>
+                    <!-- As core's Block and Products content types: the settings live in the directive. -->
+                    <converter component="MageOS_Faq/js/content-type/mageos_faq/mass-converter/widget-directive"
+                               name="widget_directive">
+                        <config>
+                            <item name="html_variable" value="html"/>
+                        </config>
+                    </converter>
+                </converters>
             </appearance>
         </appearances>
     </type>

@@ -44,6 +44,18 @@ before 2026-10-02. Its history up to then is kept in that repository.
 
 ### Changed
 
+- **The Page Builder FAQ element is stored as a `{{widget}}` directive** (review A6), the way
+  core's Block and Products content types store theirs.
+  - Core's widget filter renders it on the storefront, wherever Page Builder content goes.
+  - `Plugin\PageBuilder\FaqRenderer`, the plugin on `Magento\Framework\Filter\Template` that
+    replaced a placeholder div on every filtered string, is removed, and with it
+    `etc/frontend/di.xml`.
+  - The element's form refuses `"`, `{`, `}` and `\` in the identifier and the heading, which a
+    directive value cannot carry (rule `mageos-faq-directive-safe`). `&`, `<` and `>` are carried.
+  - **FAQ elements saved before this change render nothing** until they are opened in Page
+    Builder, given their identifier (and heading) again, and saved. Their settings were in data
+    attributes, which the element no longer reads. Nothing is migrated.
+  - See the README's "The Page Builder element".
 - **Breaking: the FAQ uses its own prefix, `mageos_faq`.** Nothing is migrated.
   - the table `mageos_seo_faq` becomes `mageos_faq`; `setup:upgrade` creates it empty and drops
     the old one with its rows;

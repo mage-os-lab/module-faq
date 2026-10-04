@@ -15,7 +15,8 @@ This module was part of [mage-os/module-seo](https://github.com/mage-os-lab/modu
 - **Two placements** that render a group:
   - **Widget**: add the *SEO FAQ List* widget to any CMS block or page, or to a layout. Works in
     any theme.
-  - **Page Builder**: drop the native *FAQ* content type (in "Add Content") into any stage.
+  - **Page Builder**: drop the native *FAQ* content type (in "Add Content") into any stage. It is
+    stored as that same widget — see [The Page Builder element](#the-page-builder-element).
 - **The same markup for both**: theme-agnostic `<details>`/`<summary>`, with no JavaScript.
 - **FAQPage JSON-LD that matches what the page shows.**
   - Both placements feed one request-scoped collector, and the JSON-LD block renders at the end of
@@ -30,6 +31,26 @@ Each question shows the browser's own open/close triangle. Magento's LESS reset 
 Blank (`summary { display: block; }`), so `view/frontend/web/css/source/_module.less` puts it back
 for `.mageos-faq__question` only. Hyvä's Tailwind reset keeps it without help. To restyle, override
 `.mageos-faq__question` in your theme.
+
+### The Page Builder element
+
+The FAQ element stores its settings the way core's Block and Products content types store theirs:
+as a `{{widget}}` directive inside its div, which core's widget filter renders on the storefront.
+
+```html
+<div data-content-type="mageos_faq" data-appearance="default" data-element="main">{{widget type="MageOS\Faq\Block\Widget\FaqList" identifier="shipping" heading="Tips &amp; tricks"}}</div>
+```
+
+So it renders wherever Page Builder content does — CMS pages and blocks, category and product
+descriptions — with no plugin of this module's in the way.
+
+A directive value cannot carry everything a text field can:
+
+- **`"`, `{`, `}` and `\` are refused** by the element's form. A `"` would end the value early, `}}`
+  would end the directive, and the tokenizer keeps or drops a `\`.
+- **`&`, `<` and `>` are fine.** They are escaped in the directive and show as typed.
+- **`%` followed by two hex digits is decoded**, as in every widget directive: "20% off" is kept,
+  a literal "%20" becomes a space.
 
 ---
 
