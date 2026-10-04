@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!--
+            FAQ structured data renders at end of body so all visible FAQ elements (widgets, Page
+            Builder) have registered their groups with the collector. JSON-LD is valid anywhere in
+            the document. It must NOT carry cacheable="false": it is fully FPC-safe.
+        -->
+        <referenceContainer name="before.body.end">
+            <block class="MageOS\Faq\Block\FaqJsonLd"
+                   name="mageos_faq.json_ld"
+                   template="MageOS_Faq::faq/json-ld.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

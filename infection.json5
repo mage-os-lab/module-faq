@@ -1,0 +1,33 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    // Scope mutation testing to source whose logic unit tests can verify, as MageOS_Seo (which
+    // this module was split from) does. The resource models and GroupReader are covered by
+    // Test/Integration against a real database: their queries are invisible to a doubled
+    // collection, so their mutants are unkillable in unit tests by design.
+    //
+    // FaqRepository is excluded for the reason MageOS_Seo excludes OrganizationRepository: its
+    // round trips are covered by Test/Integration, and its unit test doubles generated factories,
+    // so it cannot run here (see below).
+    "source": {
+        "directories": ["Model"],
+        "excludes": [
+            "ResourceModel",
+            "Faq/GroupReader.php",
+            "FaqRepository.php"
+        ]
+    },
+    "mutators": { "@default": true },
+    "phpUnit": { "configDir": "." },
+    // Infection runs PHPUnit from the module directory, where Magento's code generator has never
+    // run, so a test that doubles a generated class (GroupReader's CollectionFactory,
+    // FaqRepository's model, collection and search-results factories) cannot be built. Those tests
+    // are tagged magento-generated and run in the unit job, inside an installation.
+    "testFrameworkOptions": "--exclude-group=magento-generated",
+    // The same thresholds as MageOS_Seo.
+    "minMsi": 58,
+    "minCoveredMsi": 70,
+    "logs": {
+        "text": "infection.log",
+        "github": true
+    }
+}

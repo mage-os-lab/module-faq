@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="MageOS\Faq\Api\FaqCollectorInterface"
+                type="MageOS\Faq\Model\Faq\Collector"/>
+
+    <preference for="MageOS\Faq\Api\FaqRepositoryInterface"
+                type="MageOS\Faq\Model\FaqRepository"/>
+    <!-- FaqRepositoryInterface::getList()'s results: core's SearchResults under the FAQ interface. -->
+    <preference for="MageOS\Faq\Api\Data\FaqSearchResultsInterface"
+                type="MageOS\Faq\Model\FaqSearchResults"/>
+
+    <!--
+        This module's table is one FAQ source among any others in MageOS_Seo's pool, which the
+        structured data and the llms documents read.
+    -->
+    <type name="MageOS\Seo\Model\Faq\SourcePool">
+        <arguments>
+            <argument name="sources" xsi:type="array">
+                <item name="table"
+                      xsi:type="object">MageOS\Faq\Model\Faq\Source\TableFaqSource</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- FAQ admin grid: collection for the listing UI component data source -->
+    <virtualType name="MageOS\Faq\Model\ResourceModel\Faq\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">mageos_faq</argument>
+            <argument name="resourceModel" xsi:type="string">MageOS\Faq\Model\ResourceModel\Faq</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mageos_faq_listing_data_source" xsi:type="string">
+                    MageOS\Faq\Model\ResourceModel\Faq\Grid\Collection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>

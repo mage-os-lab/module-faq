@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route id="mageos_faq" frontName="mageos_faq">
+            <module name="MageOS_Faq"/>
+        </route>
+    </router>
+</config>

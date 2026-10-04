@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!-- Under MageOS_Seo's Marketing → SEO menu, between Organization and Configuration. -->
+        <add id="MageOS_Faq::faq"
+             title="FAQ Manager"
+             translate="title"
+             module="MageOS_Faq"
+             sortOrder="15"
+             parent="MageOS_Seo::seo"
+             action="mageos_faq/faq/index"
+             resource="MageOS_Faq::faq"/>
+    </menu>
+</config>

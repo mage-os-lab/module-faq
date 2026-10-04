@@ -1,0 +1,41 @@
+"Add New FAQ","Add New FAQ"
+Back,Back
+Delete,Delete
+"Are you sure you want to delete this FAQ?","Are you sure you want to delete this FAQ?"
+Save,Save
+"No FAQ specified to delete.","No FAQ specified to delete."
+"The FAQ entry has been deleted.","The FAQ entry has been deleted."
+"This FAQ no longer exists.","This FAQ no longer exists."
+"Edit FAQ","Edit FAQ"
+"New FAQ","New FAQ"
+"SEO — FAQ Manager","SEO — FAQ Manager"
+"The FAQ entry has been saved.","The FAQ entry has been saved."
+"Identifier, question and answer are required.","Identifier, question and answer are required."
+"FAQ with id ""%1"" does not exist.","FAQ with id ""%1"" does not exist."
+"FAQ model must extend AbstractModel.","FAQ model must extend AbstractModel."
+"Could not save the FAQ: %1","Could not save the FAQ: %1"
+"Could not delete the FAQ: %1","Could not delete the FAQ: %1"
+Edit,Edit
+"Delete FAQ","Delete FAQ"
+FAQ,FAQ
+Group:,Group:
+"Open settings to choose a FAQ group identifier.","Open settings to choose a FAQ group identifier."
+"FAQ Manager","FAQ Manager"
+"SEO FAQ List","SEO FAQ List"
+"Renders a FAQ group as an accordion and adds matching FAQPage structured data.","Renders a FAQ group as an accordion and adds matching FAQPage structured data."
+"FAQ Group Identifier","FAQ Group Identifier"
+"The group identifier of the FAQ entries to display (e.g. shipping, returns).","The group identifier of the FAQ entries to display (e.g. shipping, returns)."
+"Heading (optional)","Heading (optional)"
+"Optional heading rendered above the FAQ list.","Optional heading rendered above the FAQ list."
+"FAQ Entry","FAQ Entry"
+"Group Identifier","Group Identifier"
+"Reference this group from the FAQ widget or Page Builder. Groups selected under Stores → Configuration → MageOS SEO → AI Information & Crawlers → AI Discoverability (llms.txt) also appear in llms.txt.","Reference this group from the FAQ widget or Page Builder. Groups selected under Stores → Configuration → MageOS SEO → AI Information & Crawlers → AI Discoverability (llms.txt) also appear in llms.txt."
+"Store View ID","Store View ID"
+"0 = all store views.","0 = all store views."
+Question,Question
+Answer,Answer
+"Sort Order","Sort Order"
+Active,Active
+ID,ID
+"FAQ Settings","FAQ Settings"
+"The group identifier of the FAQ entries to display (e.g. shipping).","The group identifier of the FAQ entries to display (e.g. shipping)."

@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+namespace MageOS\Faq\Model\ResourceModel;
+
+use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
+
+class Faq extends AbstractDb
+{
+    /**
+     * Initialize the main table and primary key.
+     *
+     * @return void
+     */
+    protected function _construct(): void
+    {
+        $this->_init('mageos_faq', 'entity_id');
+    }
+}

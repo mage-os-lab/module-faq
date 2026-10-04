@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="MageOS_Faq">
+        <sequence>
+            <!--
+                MageOS_Seo owns the FAQ source pool this module's table registers with, the SEO menu
+                and ACL parent the FAQ Manager sits under, and the structured-data switch.
+            -->
+            <module name="MageOS_Seo"/>
+            <module name="Magento_Store"/>
+            <module name="Magento_Widget"/>
+            <!-- Optional (composer suggest): the FAQ content type. -->
+            <module name="Magento_PageBuilder"/>
+        </sequence>
+    </module>
+</config>
