@@ -17,7 +17,7 @@
             <parameter name="identifier" xsi:type="text" visible="true" required="true" sort_order="10">
                 <label translate="true">FAQ Group Identifier</label>
                 <description translate="true"
-                >The group identifier of the FAQ entries to display (e.g. shipping, returns).</description>
+                >The group identifier of the FAQ entries to display (e.g. shipping, returns): lowercase letters, digits, hyphens and underscores only.</description>
             </parameter>
             <parameter name="heading" xsi:type="text" visible="true" required="false" sort_order="20">
                 <label translate="true">Heading (optional)</label>

@@ -9,7 +9,7 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Store\Model\StoreManagerInterface;
 use MageOS\Faq\Api\FaqCollectorInterface;
-use MageOS\Faq\Model\Faq;
+use MageOS\Faq\Model\Faq\Identifier;
 use MageOS\Seo\Model\Config;
 use MageOS\Seo\Model\Faq\SourcePool;
 
@@ -28,6 +28,7 @@ class FaqJsonLd extends Template implements IdentityInterface
      * @param SourcePool $sourcePool
      * @param StoreManagerInterface $storeManager
      * @param Config $seoConfig
+     * @param Identifier $identifier
      * @param mixed[] $data
      */
     public function __construct(
@@ -36,6 +37,7 @@ class FaqJsonLd extends Template implements IdentityInterface
         private readonly SourcePool            $sourcePool,
         private readonly StoreManagerInterface $storeManager,
         private readonly Config                $seoConfig,
+        private readonly Identifier            $identifier,
         array                                  $data = []
     ) {
         parent::__construct($context, $data);
@@ -111,14 +113,15 @@ class FaqJsonLd extends Template implements IdentityInterface
      *
      * Rendered late (end of body), so all visible FAQ elements have registered their
      * groups by the time FPC collects identities.
+     *
+     * The tags of those groups only. This block is on every page, so the bare mageos_faq tag it
+     * used to add made one FAQ edit purge every cached page (issue #3).
      */
     public function getIdentities(): array
     {
-        $identities = [Faq::CACHE_TAG];
-        foreach ($this->collector->getIdentifiers() as $identifier) {
-            $identities[] = Faq::CACHE_TAG . '_group_' . $identifier;
-        }
-
-        return $identities;
+        return array_values(array_filter(
+            array_map($this->identifier->tag(...), $this->collector->getIdentifiers()),
+            static fn (?string $tag): bool => $tag !== null
+        ));
     }
 }

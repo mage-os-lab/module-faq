@@ -61,8 +61,11 @@
                 <label translate="true">Group Identifier</label>
                 <dataType>text</dataType>
                 <notice
-                translate="true">Reference this group from the FAQ widget or Page Builder. Groups selected under Stores → Configuration → MageOS SEO → AI Information &amp; Crawlers → AI Discoverability (llms.txt) also appear in llms.txt.</notice>
-                <validation><rule name="required-entry" xsi:type="boolean">true</rule></validation>
+                translate="true">Lowercase letters, digits, hyphens and underscores only, e.g. shipping-returns. Reference this group from the FAQ widget or Page Builder. Groups selected under Stores → Configuration → MageOS SEO → AI Information &amp; Crawlers → AI Discoverability (llms.txt) also appear in llms.txt.</notice>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                    <rule name="mageos-faq-identifier" xsi:type="boolean">true</rule>
+                </validation>
             </settings>
         </field>
 

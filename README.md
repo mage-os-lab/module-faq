@@ -23,7 +23,8 @@ This module was part of [mage-os/module-seo](https://github.com/mage-os-lab/modu
     the body.
   - So the structured data always matches the visible questions, even under full-page and block
     cache.
-- **Cache identities:** FAQ blocks carry them, so pages are purged when a FAQ changes.
+- **Cache identities:** a page carries the cache tag of each FAQ group it shows, so saving or
+  deleting a FAQ purges the pages showing its group, and no others.
 - **A FAQ source for MageOS_Seo:** the table is registered as one source in MageOS_Seo's FAQ source
   pool, beside any other module's. The llms documents read their FAQ groups from that pool.
 
@@ -31,6 +32,35 @@ Each question shows the browser's own open/close triangle. Magento's LESS reset 
 Blank (`summary { display: block; }`), so `view/frontend/web/css/source/_module.less` puts it back
 for `.mageos-faq__question` only. Hyvä's Tailwind reset keeps it without help. To restyle, override
 `.mageos-faq__question` in your theme.
+
+### Group identifiers
+
+A group identifier is **lowercase letters, digits, `-` and `_`**, up to 128 characters:
+`shipping`, `returns-eu`, `faq_2`. A FAQ with any other identifier is refused when it is saved,
+whether from the admin or from code through the repository or the model (`Model\Faq::beforeSave()`),
+and both admin forms check the rule as you type.
+
+The identifier ends up where other characters have a meaning of their own:
+
+- **The group's cache tag**, `mageos_faq_group_<identifier>`, which Magento sends Varnish in a
+  purge header and a ban expression. A line break there adds a header; a bracket breaks the
+  expression.
+- **The `{{widget}}` directive** the widget and the Page Builder element are stored as.
+- **Lowercase only**, because the database compares identifiers without regard to case:
+  `Shipping` and `shipping` were always one group, and their cache tags must agree.
+
+**Upgrading from 1.0.0:** `setup:upgrade` rewrites any identifier outside these characters
+(`Setup\Patch\Data\NormalizeFaqIdentifiers`). It lowercases it, decodes HTML entities, turns each
+run of other characters into one `-`, and trims `-` from the ends: `Shipping & Returns` becomes
+`shipping-returns`. An identifier with nothing left becomes `group-` and eight hex digits. Two
+groups that come out alike become one. Each rewrite is logged to `var/log/system.log` with the
+FAQ's id and both identifiers.
+
+Content placed before the upgrade keeps working. Widgets, Page Builder elements and settings that
+name the old identifier are looked up through the same rewrite (`Model\Faq\Identifier::normalize()`),
+so they find the group under its new identifier. Edit them to the new identifier when convenient.
+A multi-select that lists FAQ groups, such as MageOS_Aeo's llms.txt *FAQ Groups*, shows an old
+identifier as unselected; reselect the group there before saving that page again.
 
 ### The Page Builder element
 
@@ -44,13 +74,19 @@ as a `{{widget}}` directive inside its div, which core's widget filter renders o
 So it renders wherever Page Builder content does — CMS pages and blocks, category and product
 descriptions — with no plugin of this module's in the way.
 
-A directive value cannot carry everything a text field can:
+A directive value cannot carry everything a text field can, so the element's form refuses what it
+cannot:
 
-- **`"`, `{`, `}` and `\` are refused** by the element's form. A `"` would end the value early, `}}`
-  would end the directive, and the tokenizer keeps or drops a `\`.
+- **The identifier** follows the [group identifier](#group-identifiers) rule.
+- **The heading refuses `"`, `{`, `}`, `\` and `%`.** A `"` would end the value early, `}}` would
+  end the directive, and the tokenizer keeps or drops a `\`. A `%` starts an escape: core's
+  tokenizer URL-decodes a directive's parameters once, so `%41` would render as `A` and `100%25`
+  as `100%`.
 - **`&`, `<` and `>` are fine.** They are escaped in the directive and show as typed.
-- **`%` followed by two hex digits is decoded**, as in every widget directive: "20% off" is kept,
-  a literal "%20" becomes a space.
+
+Core decodes every `{{widget}}` directive this way, including the ones the editor's *Insert Widget*
+writes. That form is core's and stores a value as typed unless it contains `{` or `}`, so there a
+heading with `%` and two hex digits, such as `%41`, renders decoded.
 
 ---
 
@@ -86,7 +122,9 @@ bin/magento cache:flush
 
 Identifiers this module owns:
 - **Table:** `mageos_faq`.
-- **Cache tags:** `mageos_faq`, and `mageos_faq_group_<identifier>` per group.
+- **Cache tags:** `mageos_faq_group_<identifier>` per group, on the pages that show it. A FAQ's
+  save or delete purges its group's tag (both groups', when it moves) and `mageos_faq`, which no
+  page carries since 1.0.1.
 - **Model events:** `mageos_faq_save_after` / `mageos_faq_delete_after`.
 - **Widget id:** `mageos_faq_list`.
 - **Page Builder content type:** `mageos_faq`.

@@ -9,6 +9,7 @@ use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use MageOS\Faq\Api\FaqCollectorInterface;
 use MageOS\Faq\Block\FaqJsonLd;
+use MageOS\Faq\Model\Faq\Identifier;
 use MageOS\Seo\Model\Config;
 use MageOS\Seo\Model\Faq\SourcePool;
 use PHPUnit\Framework\MockObject\Stub;
@@ -52,7 +53,8 @@ class FaqJsonLdTest extends TestCase
             $this->collector,
             $this->sourcePool,
             $storeManager,
-            $this->config
+            $this->config,
+            new Identifier()
         );
     }
 
@@ -67,6 +69,22 @@ class FaqJsonLdTest extends TestCase
         $this->config->method('isStructuredDataEnabled')->willReturn(true);
         $this->collector->method('getIdentifiers')->willReturn([]);
         $this->assertSame('', $this->block->getJsonLd());
+    }
+
+    public function testAPageWithoutFaqsCarriesNoFaqTag(): void
+    {
+        // Issue #3: the block is on every page, and its bare mageos_faq tag made one FAQ edit purge
+        // every cached page.
+        $this->collector->method('getIdentifiers')->willReturn([]);
+
+        $this->assertSame([], $this->block->getIdentities());
+    }
+
+    public function testAPageCarriesTheTagsOfTheGroupsItShowsOnly(): void
+    {
+        $this->collector->method('getIdentifiers')->willReturn(['shipping', 'returns']);
+
+        $this->assertSame(['mageos_faq_group_shipping', 'mageos_faq_group_returns'], $this->block->getIdentities());
     }
 
     public function testEmptyWhenNoFaqsResolved(): void

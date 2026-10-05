@@ -19,9 +19,11 @@ class GroupReader
 {
     /**
      * @param CollectionFactory $collectionFactory
+     * @param Identifier $identifier
      */
     public function __construct(
-        private readonly CollectionFactory $collectionFactory
+        private readonly CollectionFactory $collectionFactory,
+        private readonly Identifier        $identifier
     ) {
     }
 
@@ -47,12 +49,16 @@ class GroupReader
     /**
      * Return active FAQ entries for a group identifier and store, ordered by sort order.
      *
+     * The identifier is normalised first (Faq\Identifier::normalize()), so a group named in
+     * configuration or content from before identifiers were restricted is still found.
+     *
      * @param string $identifier
      * @param int $storeId
      * @return array<int, array{question: string, answer: string}>
      */
     public function getByIdentifier(string $identifier, int $storeId): array
     {
+        $identifier = $this->identifier->normalize($identifier);
         if ($identifier === '') {
             return [];
         }

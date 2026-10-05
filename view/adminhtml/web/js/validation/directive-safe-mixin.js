@@ -3,8 +3,9 @@
  *
  * The FAQ Page Builder content type stores its settings as a widget directive. In it, " ends a value
  * early (core's Tokenizer\Parameter splits on it, and the stage would not keep it escaped), } closes
- * the directive, and \ is kept or eaten by the tokenizer. So the form refuses them rather than store
- * a directive that renders something else.
+ * the directive, \ is kept or eaten by the tokenizer, and % starts an escape: the tokenizer URL-decodes
+ * the parameters once (AbstractTokenizer::setString()), so "100%25" renders as "100%" and "%41" as "A".
+ * So the form refuses them rather than store a directive that renders something else.
  */
 define([
     'jquery',
@@ -12,7 +13,7 @@ define([
 ], function ($) {
     'use strict';
 
-    var REFUSED = /["{}\\]/;
+    var REFUSED = /["{}\\%]/;
 
     return function (validator) {
         validator.addRule(
@@ -20,7 +21,7 @@ define([
             function (value) {
                 return !REFUSED.test(value || '');
             },
-            $.mage.__('Leave out %1: the FAQ widget directive cannot carry them.').replace('%1', '" { } \\')
+            $.mage.__('Leave out %1: the FAQ widget directive cannot carry them.').replace('%1', '" { } \\ %')
         );
 
         return validator;

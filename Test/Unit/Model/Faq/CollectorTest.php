@@ -39,6 +39,17 @@ class CollectorTest extends TestCase
         $this->assertSame(['shipping', 'returns'], $this->collector->getIdentifiers());
     }
 
+    public function testNumericIdentifiersComeBackAsStrings(): void
+    {
+        // Issue #2: kept as array keys, "123" came back as the integer 123, and the JSON-LD block's
+        // strictly typed source lookup threw a TypeError while rendering the page.
+        foreach (['0', '123', '-7', '01'] as $identifier) {
+            $this->collector->collect($identifier);
+        }
+
+        $this->assertSame(['0', '123', '-7', '01'], $this->collector->getIdentifiers());
+    }
+
     public function testIgnoresEmptyIdentifier(): void
     {
         $this->collector->collect('');

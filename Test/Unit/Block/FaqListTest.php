@@ -9,6 +9,7 @@ use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use MageOS\Faq\Api\FaqCollectorInterface;
 use MageOS\Faq\Block\Widget\FaqList;
+use MageOS\Faq\Model\Faq\Identifier;
 use MageOS\Seo\Model\Faq\SourcePool;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
@@ -57,7 +58,8 @@ class FaqListTest extends TestCase
             $this->createStub(Context::class),
             $sourcePool ?? $this->sourcePool,
             $collector ?? $this->collector,
-            $this->storeManager
+            $this->storeManager,
+            new Identifier()
         );
     }
 

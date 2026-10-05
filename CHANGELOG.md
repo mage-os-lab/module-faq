@@ -12,6 +12,55 @@ before 2026-10-02. Its history up to then is kept in that repository.
 
 ## [Unreleased]
 
+### Security
+
+- **A FAQ group identifier is lowercase letters, digits, `-` and `_`**, up to 128 characters
+  ([#1](https://github.com/mage-os-lab/module-faq/issues/1),
+  [#4](https://github.com/mage-os-lab/module-faq/issues/4)).
+  - The identifier went into the group's cache tag as typed, and Magento sends that tag to
+    Varnish in a purge header and a ban expression. A line break added a header; a bracket or a
+    parenthesis broke the expression.
+  - **Breaking: a save with any other identifier is refused**, from the admin or from code
+    (`Model\Faq::beforeSave()`), with a message saying what is allowed. Uppercase is refused
+    too: the database compares identifiers without regard to case, so `Shipping` and `shipping`
+    were already one group, and their cache tags must agree.
+  - The FAQ form and the Page Builder element's form check the rule as you type, and the widget's
+    parameter says it.
+  - **Upgrading rewrites the identifiers the rule refuses**
+    (`Setup\Patch\Data\NormalizeFaqIdentifiers`). It lowercases them, decodes HTML entities,
+    turns each run of other characters into one `-`, and trims `-` from the ends:
+    `Shipping & Returns` becomes `shipping-returns`. One with nothing left becomes `group-` and
+    eight hex digits. Groups that come out alike become one. Each rewrite is logged to
+    `var/log/system.log` with the FAQ's id and both identifiers.
+  - **Content naming the old identifier keeps working.** Widgets, Page Builder elements (which
+    stored it with HTML entities) and settings are looked up through the same rewrite
+    (`Model\Faq\Identifier::normalize()`).
+  - **Re-check after upgrading:** a multi-select listing FAQ groups, such as MageOS_Aeo's llms.txt
+    *FAQ Groups*, shows a rewritten group as unselected. Reselect it there before saving that page
+    again; until then llms.txt still shows it.
+- **The Page Builder element's heading refuses `%`**
+  ([#5](https://github.com/mage-os-lab/module-faq/issues/5)). Core's tokenizer URL-decodes a
+  widget directive's parameters once, so `%22` in a heading became a `"` after the form's check and
+  could end the value and set other parameters. `"`, `{`, `}` and `\` were already refused.
+
+### Changed
+
+- **Four constructors take `Model\Faq\Identifier`**, the service that holds the identifier rule:
+  `Model\Faq`, `Block\AbstractFaqElement` (so `Block\Widget\FaqList`), `Block\FaqJsonLd` and
+  `Model\Faq\GroupReader`. None of them is `@api`, but a subclass that overrides one of these
+  constructors must now pass it.
+
+### Fixed
+
+- **One FAQ save no longer purges every cached page**
+  ([#3](https://github.com/mage-os-lab/module-faq/issues/3)). The FAQPage JSON-LD block is on
+  every page and gave each the bare `mageos_faq` tag, which every FAQ save purges. A page now
+  carries the tags of the groups it shows and nothing else, so a save purges the pages showing its
+  group (both groups, when it moves).
+- **A numeric group identifier renders its FAQPage JSON-LD**
+  ([#2](https://github.com/mage-os-lab/module-faq/issues/2)). The collector kept identifiers as
+  array keys, so PHP turned `"123"` into an int, and the JSON-LD block failed with a `TypeError`.
+
 ## [1.0.0] — 2026-10-05
 
 ### Added
