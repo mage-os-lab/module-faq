@@ -9,6 +9,7 @@
         "mage-os/module-seo": "^1.2",
         "magento/framework": "^103.0.7",
         "magento/module-backend": "*",
+        "magento/module-cms": "*",
         "magento/module-config": "*",
         "magento/module-store": "*",
         "magento/module-ui": "*",

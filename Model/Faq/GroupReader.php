@@ -30,8 +30,9 @@ class GroupReader
     /**
      * Return every FAQ group identifier in use, once each and sorted, across stores and states.
      *
-     * A collection always selects the ID column, so a DISTINCT select would not collapse the rows;
-     * they are deduplicated here instead. The FAQ table is small, and this serves admin option lists.
+     * Only the identifier column is selected (a single addFieldToSelect() replaces the select list,
+     * ID included), and the values are deduplicated here. The FAQ table is small, and this serves
+     * admin option lists.
      *
      * @return string[]
      */

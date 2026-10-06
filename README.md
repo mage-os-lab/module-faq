@@ -21,8 +21,8 @@ This module was part of [mage-os/module-seo](https://github.com/mage-os-lab/modu
 - **FAQPage JSON-LD that matches what the page shows.**
   - Both placements feed one request-scoped collector, and the JSON-LD block renders at the end of
     the body.
-  - So the structured data always matches the visible questions, even under full-page and block
-    cache.
+  - So the structured data matches the visible questions, under the full page cache too. The
+    exception is a block that caches its own HTML around them: see [Block cache](#block-cache).
 - **Cache identities:** a page carries the cache tag of each FAQ group it shows, so saving or
   deleting a FAQ purges the pages showing its group, and no others.
 - **A FAQ source for MageOS_Seo:** the table is registered as one source in MageOS_Seo's FAQ source
@@ -61,6 +61,22 @@ name the old identifier are looked up through the same rewrite (`Model\Faq\Ident
 so they find the group under its new identifier. Edit them to the new identifier when convenient.
 A multi-select that lists FAQ groups, such as MageOS_Aeo's llms.txt *FAQ Groups*, shows an old
 identifier as unselected; reselect the group there before saving that page again.
+
+### Block cache
+
+**Don't place the widget or the Page Builder element inside a block that caches its own HTML**:
+one with a `cache_lifetime`, or a `ttl` in layout XML. When that block's cache answers, nothing
+inside it runs, the FAQ list included:
+
+- the page gets **no FAQPage JSON-LD** for that group, because the list never told the collector
+  it was shown;
+- the page carries **no cache tag** for the group, so a FAQ edit doesn't purge it;
+- the block shows the **old questions** until its own cache expires, even after the full page
+  cache is cleared.
+
+Core's CMS blocks, CMS widgets and CMS pages don't cache their HTML, so content placed through
+them — the widget, Page Builder, a CMS block in a layout — is not affected. A theme or custom block
+that sets a lifetime is. Remove its lifetime, or keep the FAQ outside it.
 
 ### The Page Builder element
 

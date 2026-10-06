@@ -48,7 +48,19 @@ before 2026-10-02. Its history up to then is kept in that repository.
 - **Four constructors take `Model\Faq\Identifier`**, the service that holds the identifier rule:
   `Model\Faq`, `Block\AbstractFaqElement` (so `Block\Widget\FaqList`), `Block\FaqJsonLd` and
   `Model\Faq\GroupReader`. None of them is `@api`, but a subclass that overrides one of these
-  constructors must now pass it.
+  constructors must now pass it. `Controller\Adminhtml\Faq\Save` takes `StoreManagerInterface`.
+- **The FAQ form's store is a selector**, with core's store options: All Store Views, then each
+  website, store and store view, as on the CMS page form. It was a number to type. The grid's
+  column shows the store's name and filters by it. Both are labelled "Store".
+- **Active is a switch, and on for a new FAQ**, matching the column's default. New FAQs saved
+  inactive unless it was ticked.
+- **Requires `magento/module-cms`** for those store options. It is part of every installation.
+- **The README says where the FAQ list can't be cached around**
+  ([#6](https://github.com/mage-os-lab/module-faq/issues/6)): inside a block that caches its own
+  HTML, the list doesn't run on a cache hit. The page gets no FAQPage JSON-LD and no group cache
+  tag, and shows old questions until that block's cache expires. Core's CMS blocks, widgets and
+  pages don't cache their HTML; a theme or custom block with a lifetime does. The README and two
+  docblocks claimed the JSON-LD stayed right under block cache.
 
 ### Fixed
 
@@ -57,6 +69,14 @@ before 2026-10-02. Its history up to then is kept in that repository.
   every page and gave each the bare `mageos_faq` tag, which every FAQ save purges. A page now
   carries the tags of the groups it shows and nothing else, so a save purges the pages showing its
   group (both groups, when it moves).
+- **A new FAQ whose save fails reopens with what was typed**
+  ([#7](https://github.com/mage-os-lab/module-faq/issues/7)). The input was kept under the key `0`,
+  where the form never looks for a new record, and then discarded.
+- **A store that no longer exists is refused in words.** The admin saw the database's foreign-key
+  error instead.
+- **The Page Builder FAQ element's preview renders once a group is set.** It labelled the group
+  with a translated "Group:", and core's template renderer wraps a value with a colon in braces,
+  which made the binding unparsable.
 - **A numeric group identifier renders its FAQPage JSON-LD**
   ([#2](https://github.com/mage-os-lab/module-faq/issues/2)). The collector kept identifiers as
   array keys, so PHP turned `"123"` into an int, and the JSON-LD block failed with a `TypeError`.

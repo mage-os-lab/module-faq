@@ -17,8 +17,8 @@ use MageOS\Seo\Model\Faq\SourcePool;
  * Emits one FAQPage JSON-LD node for all FAQ groups rendered on the page.
  *
  * Rendered late (end of body) so every visible FAQ element has already registered its group with
- * the collector. Re-resolves the collected identifiers (rather than trusting render-time data) so
- * the schema stays correct even if an element's HTML was block-cached, and dedupes questions.
+ * the collector. Resolves the collected identifiers itself and dedupes questions. An element inside
+ * a block served from the block cache never runs, so never registers: README, "Block cache".
  */
 class FaqJsonLd extends Template implements IdentityInterface
 {

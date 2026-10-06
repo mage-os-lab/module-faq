@@ -9,8 +9,12 @@
     <div style="padding: 24px; background: #f5f5f5; border: 1px dashed #ccc; text-align: center;">
         <strong translate="'FAQ'"></strong>
         <!-- data.main.html is the group identifier here: see converter/preview/group.js. -->
+        <!--
+            The colon stays outside the phrase: the template renderer wraps an attribute value that
+            contains one in braces (renderer.wrapArgs()), which no binding can parse.
+        -->
         <div if="data.main.html" style="color: #555; margin-top: 4px;">
-            <span translate="'Group:'"></span>
+            <span translate="'Group'"></span>:
             <span text="data.main.html"></span>
         </div>
         <div ifnot="data.main.html" style="color: #999; margin-top: 4px;">

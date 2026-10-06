@@ -60,10 +60,16 @@
                 <label translate="true">Group Identifier</label>
             </settings>
         </column>
-        <column name="store_id">
+        <!--
+            The form's store options, named. Not core's Store column: it shows nothing for a single
+            store_id of 0, which it reads as empty.
+        -->
+        <column name="store_id" component="Magento_Ui/js/grid/columns/select">
             <settings>
-                <filter>text</filter>
-                <label translate="true">Store View ID</label>
+                <options class="Magento\Cms\Ui\Component\Listing\Column\Cms\Options"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Store</label>
             </settings>
         </column>
         <column name="question">

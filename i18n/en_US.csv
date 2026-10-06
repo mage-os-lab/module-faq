@@ -11,6 +11,7 @@ Save,Save
 "SEO — FAQ Manager","SEO — FAQ Manager"
 "The FAQ entry has been saved.","The FAQ entry has been saved."
 "Identifier, question and answer are required.","Identifier, question and answer are required."
+"The selected store no longer exists. Choose another and save again.","The selected store no longer exists. Choose another and save again."
 "The FAQ group identifier can only contain lowercase letters, digits, - and _, up to 128 characters.","The FAQ group identifier can only contain lowercase letters, digits, - and _, up to 128 characters."
 "FAQ with id ""%1"" does not exist.","FAQ with id ""%1"" does not exist."
 "FAQ model must extend AbstractModel.","FAQ model must extend AbstractModel."
@@ -19,7 +20,7 @@ Save,Save
 Edit,Edit
 "Delete FAQ","Delete FAQ"
 FAQ,FAQ
-Group:,Group:
+Group,Group
 "Open settings to choose a FAQ group identifier.","Open settings to choose a FAQ group identifier."
 "Leave out %1: the FAQ widget directive cannot carry them.","Leave out %1: the FAQ widget directive cannot carry them."
 "Use lowercase letters (a-z), digits (0-9), hyphens (-) and underscores (_) only, up to 128 characters.","Use lowercase letters (a-z), digits (0-9), hyphens (-) and underscores (_) only, up to 128 characters."
@@ -33,8 +34,7 @@ Group:,Group:
 "FAQ Entry","FAQ Entry"
 "Group Identifier","Group Identifier"
 "Lowercase letters, digits, hyphens and underscores only, e.g. shipping-returns. Reference this group from the FAQ widget or Page Builder. Groups selected under Stores → Configuration → MageOS SEO → AI Information & Crawlers → AI Discoverability (llms.txt) also appear in llms.txt.","Lowercase letters, digits, hyphens and underscores only, e.g. shipping-returns. Reference this group from the FAQ widget or Page Builder. Groups selected under Stores → Configuration → MageOS SEO → AI Information & Crawlers → AI Discoverability (llms.txt) also appear in llms.txt."
-"Store View ID","Store View ID"
-"0 = all store views.","0 = all store views."
+Store,Store
 Question,Question
 Answer,Answer
 "Sort Order","Sort Order"

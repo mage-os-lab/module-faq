@@ -9,8 +9,9 @@ namespace MageOS\Faq\Api;
  *
  * Visible FAQ elements (widget, Page Builder, any AbstractFaqElement) register their group
  * identifier as they render in the body; a late head/end-of-body block re-resolves those
- * identifiers to emit FAQPage structured data that always matches what is actually shown. Storing
- * identifiers (not resolved FAQs) keeps the schema correct even when an element's HTML is block-cached.
+ * identifiers to emit FAQPage structured data that matches what is actually shown. An element
+ * registers only when it runs: inside a block that serves its own HTML from the block cache, it
+ * does not, and the page gets no FAQPage data for it (README, "Block cache").
  *
  * @api
  */

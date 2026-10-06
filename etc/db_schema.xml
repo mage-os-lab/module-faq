@@ -30,7 +30,8 @@
         </index>
         <!--
             store_id sits second in the index above, so the foreign key needs its own.
-            identifier is a free-text grouping key and references nothing.
+            identifier is a grouping key (lowercase letters, digits, - and _: Model\Faq\Identifier)
+            and references nothing.
         -->
         <constraint xsi:type="foreign" referenceId="MAGEOS_FAQ_STORE_ID_STORE_STORE_ID"
                     table="mageos_faq" column="store_id"
