@@ -39,6 +39,15 @@
         <index referenceId="MAGEOS_FAQ_STORE_ID" indexType="btree">
             <column name="store_id"/>
         </index>
+        <!--
+            The admin grid's keyword search: core's fulltext filter matches against the table's
+            fulltext index and, without one, returns without filtering.
+        -->
+        <index referenceId="MAGEOS_FAQ_QUESTION_ANSWER_IDENTIFIER" indexType="fulltext">
+            <column name="question"/>
+            <column name="answer"/>
+            <column name="identifier"/>
+        </index>
     </table>
 
 </schema>

@@ -10,7 +10,7 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Store\Model\StoreManagerInterface;
 use MageOS\Faq\Api\FaqCollectorInterface;
 use MageOS\Faq\Model\Faq\Identifier;
-use MageOS\Seo\Model\Faq\SourcePool;
+use MageOS\Seo\Api\FaqSourcePoolInterface;
 
 /**
  * Base block for any element that renders a FAQ group (widget, Page Builder, custom).
@@ -32,19 +32,19 @@ class AbstractFaqElement extends Template implements IdentityInterface
 
     /**
      * @param Context $context
-     * @param SourcePool $sourcePool
+     * @param FaqSourcePoolInterface $sourcePool
      * @param FaqCollectorInterface $collector
      * @param StoreManagerInterface $storeManager
      * @param Identifier $identifier
      * @param mixed[] $data
      */
     public function __construct(
-        Context                                $context,
-        private readonly SourcePool            $sourcePool,
-        private readonly FaqCollectorInterface $collector,
-        private readonly StoreManagerInterface $storeManager,
-        private readonly Identifier            $identifier,
-        array                                  $data = []
+        Context                                 $context,
+        private readonly FaqSourcePoolInterface $sourcePool,
+        private readonly FaqCollectorInterface  $collector,
+        private readonly StoreManagerInterface  $storeManager,
+        private readonly Identifier             $identifier,
+        array                                   $data = []
     ) {
         parent::__construct($context, $data);
     }

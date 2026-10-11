@@ -4,9 +4,14 @@
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
-                <!-- Under MageOS_Seo's SEO resource, beside its Organization Settings. -->
-                <resource id="MageOS_Seo::seo">
-                    <resource id="MageOS_Faq::faq" title="FAQ Manager" translate="title" sortOrder="15"/>
+                <!--
+                    Where its menu item is, Marketing → SEO, beside MageOS_Seo's Organization
+                    Settings.
+                -->
+                <resource id="Magento_Backend::marketing">
+                    <resource id="MageOS_Seo::seo">
+                        <resource id="MageOS_Faq::faq" title="FAQ Manager" translate="title" sortOrder="15"/>
+                    </resource>
                 </resource>
             </resource>
         </resources>

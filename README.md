@@ -11,8 +11,10 @@ This module was part of [mage-os/module-seo](https://github.com/mage-os-lab/modu
 ## What it does
 
 - **FAQ Manager** under **Marketing → SEO → FAQ Manager**: FAQ entries grouped by an identifier,
-  one row per entry per store view (store view 0 = all store views).
-- **Two placements** that render a group:
+  one row per entry per store view (store view 0 = all store views). The grid's keyword search
+  looks in the question, the answer and the identifier, and its mass actions delete, enable or
+  disable the entries selected.
+- **Two placements** that render a group, each picking it from the groups that exist:
   - **Widget**: add the *SEO FAQ List* widget to any CMS block or page, or to a layout. Works in
     any theme.
   - **Page Builder**: drop the native *FAQ* content type (in "Add Content") into any stage. It is
@@ -58,7 +60,9 @@ FAQ's id and both identifiers.
 
 Content placed before the upgrade keeps working. Widgets, Page Builder elements and settings that
 name the old identifier are looked up through the same rewrite (`Model\Faq\Identifier::normalize()`),
-so they find the group under its new identifier. Edit them to the new identifier when convenient.
+so they find the group under its new identifier. A widget or element opened for editing shows no
+group picked, since its group list has only the new identifiers; pick the group again before saving
+it.
 A multi-select that lists FAQ groups, such as MageOS_Aeo's llms.txt *FAQ Groups*, shows an old
 identifier as unselected; reselect the group there before saving that page again.
 
@@ -93,7 +97,8 @@ descriptions — with no plugin of this module's in the way.
 A directive value cannot carry everything a text field can, so the element's form refuses what it
 cannot:
 
-- **The identifier** follows the [group identifier](#group-identifiers) rule.
+- **The group** is picked from the groups that exist, whose identifiers follow the
+  [group identifier](#group-identifiers) rule.
 - **The heading refuses `"`, `{`, `}`, `\` and `%`.** A `"` would end the value early, `}}` would
   end the directive, and the tokenizer keeps or drops a `\`. A `%` starts an escape: core's
   tokenizer URL-decodes a directive's parameters once, so `%41` would render as `A` and `100%25`
@@ -134,7 +139,7 @@ bin/magento cache:flush
 
 | Where | What | ACL resource |
 | --- | --- | --- |
-| Marketing → SEO → FAQ Manager | The FAQ grid and form (`mageos_faq/faq/*`) | `MageOS_Faq::faq` |
+| Marketing → SEO → FAQ Manager | The FAQ grid, its mass actions and the form (`mageos_faq/faq/*`) | `MageOS_Faq::faq`, under Marketing → SEO in the role editor |
 
 Identifiers this module owns:
 - **Table:** `mageos_faq`.

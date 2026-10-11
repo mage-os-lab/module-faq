@@ -27,8 +27,9 @@ Group,Groep
 "FAQ Manager",FAQ-beheer
 "SEO FAQ List","SEO FAQ-lijst"
 "Renders a FAQ group as an accordion and adds matching FAQPage structured data.","Toont een FAQ-groep als accordeon en voegt bijbehorende gestructureerde gegevens (FAQPage) toe."
-"FAQ Group Identifier",FAQ-groepsidentificatie
-"The group identifier of the FAQ entries to display (e.g. shipping, returns): lowercase letters, digits, hyphens and underscores only.","De groepsidentificatie van de FAQ's die je wilt tonen (bijv. shipping, returns): alleen kleine letters, cijfers, koppeltekens en underscores."
+"FAQ Group",FAQ-groep
+"The group of FAQ entries to display.","De groep FAQ's die je wilt tonen."
+"-- Please Select --","-- Selecteer --"
 "Heading (optional)","Kop (optioneel)"
 "Optional heading rendered above the FAQ list.","Optionele kop boven de FAQ-lijst."
 "FAQ Entry",FAQ-item
@@ -40,6 +41,13 @@ Answer,Antwoord
 "Sort Order",Sorteervolgorde
 Active,Actief
 ID,ID
+"Are you sure you want to delete selected items?","Weet je zeker dat je de geselecteerde items wilt verwijderen?"
+"Delete items","Items verwijderen"
+Disable,Uitschakelen
+Enable,Inschakelen
+"FAQ entry %1: %2","FAQ %1: %2"
+"FAQ entries deleted: %1.","FAQ's verwijderd: %1."
+"FAQ entries enabled: %1.","FAQ's ingeschakeld: %1."
+"FAQ entries disabled: %1.","FAQ's uitgeschakeld: %1."
 "FAQ Settings",FAQ-instellingen
-"The group identifier of the FAQ entries to display (e.g. shipping-returns): lowercase letters, digits, hyphens and underscores only.","De groepsidentificatie van de FAQ's die je wilt tonen (bijv. shipping-returns): alleen kleine letters, cijfers, koppeltekens en underscores."
 "Shown above the questions. Can't contain "" { } \ or %, which the widget directive Page Builder stores cannot carry.","Staat boven de vragen. Mag geen "" { } \ of % bevatten: de widgetinstructie die Page Builder opslaat, kan die niet bevatten."

@@ -53,17 +53,24 @@
             </settings>
         </field>
 
-        <field name="identifier" sortOrder="20" formElement="input">
+        <!-- The groups that exist (Model\Config\Source\Groups), whose identifiers a directive can carry. -->
+        <field name="identifier" sortOrder="20" formElement="select">
             <settings>
-                <label translate="true">FAQ Group Identifier</label>
+                <label translate="true">FAQ Group</label>
                 <dataScope>identifier</dataScope>
                 <dataType>text</dataType>
-                <notice translate="true">The group identifier of the FAQ entries to display (e.g. shipping-returns): lowercase letters, digits, hyphens and underscores only.</notice>
+                <notice translate="true">The group of FAQ entries to display.</notice>
                 <validation>
                     <rule name="required-entry" xsi:type="boolean">true</rule>
-                    <rule name="mageos-faq-identifier" xsi:type="boolean">true</rule>
                 </validation>
             </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="MageOS\Faq\Model\Config\Source\Groups"/>
+                    </settings>
+                </select>
+            </formElements>
         </field>
 
         <field name="heading" sortOrder="30" formElement="input">

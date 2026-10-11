@@ -27,8 +27,9 @@ Group,Group
 "FAQ Manager","FAQ Manager"
 "SEO FAQ List","SEO FAQ List"
 "Renders a FAQ group as an accordion and adds matching FAQPage structured data.","Renders a FAQ group as an accordion and adds matching FAQPage structured data."
-"FAQ Group Identifier","FAQ Group Identifier"
-"The group identifier of the FAQ entries to display (e.g. shipping, returns): lowercase letters, digits, hyphens and underscores only.","The group identifier of the FAQ entries to display (e.g. shipping, returns): lowercase letters, digits, hyphens and underscores only."
+"FAQ Group","FAQ Group"
+"The group of FAQ entries to display.","The group of FAQ entries to display."
+"-- Please Select --","-- Please Select --"
 "Heading (optional)","Heading (optional)"
 "Optional heading rendered above the FAQ list.","Optional heading rendered above the FAQ list."
 "FAQ Entry","FAQ Entry"
@@ -40,6 +41,13 @@ Answer,Answer
 "Sort Order","Sort Order"
 Active,Active
 ID,ID
+"Are you sure you want to delete selected items?","Are you sure you want to delete selected items?"
+"Delete items","Delete items"
+Disable,Disable
+Enable,Enable
+"FAQ entry %1: %2","FAQ entry %1: %2"
+"FAQ entries deleted: %1.","FAQ entries deleted: %1."
+"FAQ entries enabled: %1.","FAQ entries enabled: %1."
+"FAQ entries disabled: %1.","FAQ entries disabled: %1."
 "FAQ Settings","FAQ Settings"
-"The group identifier of the FAQ entries to display (e.g. shipping-returns): lowercase letters, digits, hyphens and underscores only.","The group identifier of the FAQ entries to display (e.g. shipping-returns): lowercase letters, digits, hyphens and underscores only."
 "Shown above the questions. Can't contain "" { } \ or %, which the widget directive Page Builder stores cannot carry.","Shown above the questions. Can't contain "" { } \ or %, which the widget directive Page Builder stores cannot carry."

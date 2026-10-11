@@ -10,8 +10,8 @@ use Magento\Framework\View\Element\Template\Context;
 use Magento\Store\Model\StoreManagerInterface;
 use MageOS\Faq\Api\FaqCollectorInterface;
 use MageOS\Faq\Model\Faq\Identifier;
-use MageOS\Seo\Model\Config;
-use MageOS\Seo\Model\Faq\SourcePool;
+use MageOS\Seo\Api\FaqSourcePoolInterface;
+use MageOS\Seo\Api\StorefrontSettingsInterface;
 
 /**
  * Emits one FAQPage JSON-LD node for all FAQ groups rendered on the page.
@@ -25,20 +25,20 @@ class FaqJsonLd extends Template implements IdentityInterface
     /**
      * @param Context $context
      * @param FaqCollectorInterface $collector
-     * @param SourcePool $sourcePool
+     * @param FaqSourcePoolInterface $sourcePool
      * @param StoreManagerInterface $storeManager
-     * @param Config $seoConfig
+     * @param StorefrontSettingsInterface $seoConfig
      * @param Identifier $identifier
      * @param mixed[] $data
      */
     public function __construct(
-        Context                                $context,
-        private readonly FaqCollectorInterface $collector,
-        private readonly SourcePool            $sourcePool,
-        private readonly StoreManagerInterface $storeManager,
-        private readonly Config                $seoConfig,
-        private readonly Identifier            $identifier,
-        array                                  $data = []
+        Context                                      $context,
+        private readonly FaqCollectorInterface       $collector,
+        private readonly FaqSourcePoolInterface      $sourcePool,
+        private readonly StoreManagerInterface       $storeManager,
+        private readonly StorefrontSettingsInterface $seoConfig,
+        private readonly Identifier                  $identifier,
+        array                                        $data = []
     ) {
         parent::__construct($context, $data);
     }

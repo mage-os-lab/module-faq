@@ -5,9 +5,9 @@
  * toDom() writes {{widget type="MageOS\Faq\Block\Widget\FaqList" identifier="…" heading="…"}} into the
  * element's html; fromDom() reads the settings back out of it when the element is opened again.
  *
- * The form keeps the values to what a directive can carry: the identifier to lowercase letters,
- * digits, - and _ (mageos-faq-identifier), and the heading free of " { } \ and %
- * (mageos-faq-directive-safe). What the stage would otherwise parse as markup — & < > — is
+ * The form keeps the values to what a directive can carry: the identifier to a group that exists,
+ * picked from a select (each stored as lowercase letters, digits, - and _), and the heading free of
+ * " { } \ and % (mageos-faq-directive-safe). What the stage would otherwise parse as markup — & < > — is
  * escaped here and unescaped on the way back. The storefront shows it as typed: the widget's template
  * escapes the heading with Escaper::escapeHtml(), which does not double-encode. Escaping leaves a valid
  * identifier as it is; an element saved before the rule can hold one with entities in it, which the

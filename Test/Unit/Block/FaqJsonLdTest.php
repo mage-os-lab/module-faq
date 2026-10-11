@@ -10,8 +10,8 @@ use Magento\Store\Model\StoreManagerInterface;
 use MageOS\Faq\Api\FaqCollectorInterface;
 use MageOS\Faq\Block\FaqJsonLd;
 use MageOS\Faq\Model\Faq\Identifier;
-use MageOS\Seo\Model\Config;
-use MageOS\Seo\Model\Faq\SourcePool;
+use MageOS\Seo\Api\FaqSourcePoolInterface;
+use MageOS\Seo\Api\StorefrontSettingsInterface;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
@@ -23,14 +23,14 @@ class FaqJsonLdTest extends TestCase
     private FaqCollectorInterface&Stub $collector;
 
     /**
-     * @var SourcePool&Stub
+     * @var FaqSourcePoolInterface&Stub
      */
-    private SourcePool&Stub $sourcePool;
+    private FaqSourcePoolInterface&Stub $sourcePool;
 
     /**
-     * @var Config&Stub
+     * @var StorefrontSettingsInterface&Stub
      */
-    private Config&Stub $config;
+    private StorefrontSettingsInterface&Stub $config;
 
     /**
      * @var FaqJsonLd
@@ -40,8 +40,8 @@ class FaqJsonLdTest extends TestCase
     protected function setUp(): void
     {
         $this->collector  = $this->createStub(FaqCollectorInterface::class);
-        $this->sourcePool = $this->createStub(SourcePool::class);
-        $this->config     = $this->createStub(Config::class);
+        $this->sourcePool = $this->createStub(FaqSourcePoolInterface::class);
+        $this->config     = $this->createStub(StorefrontSettingsInterface::class);
 
         $storeManager = $this->createStub(StoreManagerInterface::class);
         $store        = $this->createStub(StoreInterface::class);
