@@ -9,7 +9,7 @@ use MageOS\Faq\Api\Data\FaqInterface;
 use MageOS\Faq\Api\FaqCollectorInterface;
 use MageOS\Faq\Api\FaqRepositoryInterface;
 use MageOS\Faq\Model\Faq;
-use MageOS\Seo\Model\Faq\SourcePool;
+use MageOS\Seo\Api\FaqSourcePoolInterface;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -55,7 +55,7 @@ class DiWiringTest extends TestCase
             ->setIsActive(true);
         Bootstrap::getObjectManager()->get(FaqRepositoryInterface::class)->save($faq);
 
-        $pool = Bootstrap::getObjectManager()->create(SourcePool::class);
+        $pool = Bootstrap::getObjectManager()->create(FaqSourcePoolInterface::class);
 
         $this->assertContains('di-wiring-check', $pool->getIdentifiers());
         $this->assertSame(

@@ -10,6 +10,7 @@ use Magento\Framework\Model\Context;
 use Magento\Framework\Registry;
 use MageOS\Faq\Api\Data\FaqInterface;
 use MageOS\Faq\Model\Faq;
+use MageOS\Faq\Model\Faq\Identifier;
 use MageOS\Faq\Model\ResourceModel\Faq as FaqResource;
 use PHPUnit\Framework\TestCase;
 
@@ -105,6 +106,16 @@ class FaqTest extends TestCase
         );
     }
 
+    public function testAnIdentifierOutsideTheAllowedCharactersBecomesNoTag(): void
+    {
+        // Issue #1: the tag goes into Varnish's purge header and ban expression; a line break
+        // there adds a header, a bracket breaks the expression.
+        $faq = $this->faq([FaqInterface::IDENTIFIER => "shipping\r\nX-Injected: yes"]);
+        $faq->setOrigData(FaqInterface::IDENTIFIER, 'faq[');
+
+        $this->assertSame([Faq::CACHE_TAG], $faq->getIdentities());
+    }
+
     public function testLeavingEveryGroupPurgesTheOldGroupsPages(): void
     {
         $faq = $this->faq([FaqInterface::IDENTIFIER => '']);
@@ -132,6 +143,7 @@ class FaqTest extends TestCase
             $this->createStub(Registry::class),
             $this->createStub(ExtensionAttributesFactory::class),
             $this->createStub(AttributeValueFactory::class),
+            new Identifier(),
             $resource,
             null,
             $data

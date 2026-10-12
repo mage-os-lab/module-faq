@@ -12,6 +12,7 @@
     <file>Block</file>
     <file>Controller</file>
     <file>Model</file>
+    <file>Setup</file>
     <file>Ui</file>
     <file>Test</file>
 </ruleset>

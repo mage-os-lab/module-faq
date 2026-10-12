@@ -9,8 +9,8 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Store\Model\StoreManagerInterface;
 use MageOS\Faq\Api\FaqCollectorInterface;
-use MageOS\Faq\Model\Faq;
-use MageOS\Seo\Model\Faq\SourcePool;
+use MageOS\Faq\Model\Faq\Identifier;
+use MageOS\Seo\Api\FaqSourcePoolInterface;
 
 /**
  * Base block for any element that renders a FAQ group (widget, Page Builder, custom).
@@ -32,29 +32,35 @@ class AbstractFaqElement extends Template implements IdentityInterface
 
     /**
      * @param Context $context
-     * @param SourcePool $sourcePool
+     * @param FaqSourcePoolInterface $sourcePool
      * @param FaqCollectorInterface $collector
      * @param StoreManagerInterface $storeManager
+     * @param Identifier $identifier
      * @param mixed[] $data
      */
     public function __construct(
-        Context                                $context,
-        private readonly SourcePool            $sourcePool,
-        private readonly FaqCollectorInterface $collector,
-        private readonly StoreManagerInterface $storeManager,
-        array                                  $data = []
+        Context                                 $context,
+        private readonly FaqSourcePoolInterface $sourcePool,
+        private readonly FaqCollectorInterface  $collector,
+        private readonly StoreManagerInterface  $storeManager,
+        private readonly Identifier             $identifier,
+        array                                   $data = []
     ) {
         parent::__construct($context, $data);
     }
 
     /**
-     * The configured FAQ group identifier.
+     * The configured FAQ group identifier, as the group is stored.
+     *
+     * Content placed before identifiers were restricted can carry one the upgrade has since rewritten
+     * (or, from Page Builder, one with HTML entities); Faq\Identifier::normalize() maps it to the
+     * group's identifier as stored now.
      *
      * @return string
      */
     public function getFaqIdentifier(): string
     {
-        return trim((string) $this->getData('identifier'));
+        return $this->identifier->normalize((string) $this->getData('identifier'));
     }
 
     /**
@@ -105,14 +111,14 @@ class AbstractFaqElement extends Template implements IdentityInterface
 
     /**
      * @inheritdoc
+     *
+     * The group's tag only: a save purges it (Model\Faq::getIdentities()). The bare mageos_faq tag
+     * every save also carries would make one FAQ edit purge every page showing any FAQ.
      */
     public function getIdentities(): array
     {
-        $identities = [Faq::CACHE_TAG];
-        if ($this->getFaqIdentifier() !== '') {
-            $identities[] = Faq::CACHE_TAG . '_group_' . $this->getFaqIdentifier();
-        }
+        $tag = $this->identifier->tag($this->getFaqIdentifier());
 
-        return $identities;
+        return $tag === null ? [] : [$tag];
     }
 }

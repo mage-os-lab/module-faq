@@ -12,6 +12,103 @@ before 2026-10-02. Its history up to then is kept in that repository.
 
 ## [Unreleased]
 
+### Security
+
+- **A FAQ group identifier is lowercase letters, digits, `-` and `_`**, up to 128 characters
+  ([#1](https://github.com/mage-os-lab/module-faq/issues/1),
+  [#4](https://github.com/mage-os-lab/module-faq/issues/4)).
+  - The identifier went into the group's cache tag as typed, and Magento sends that tag to
+    Varnish in a purge header and a ban expression. A line break added a header; a bracket or a
+    parenthesis broke the expression.
+  - **Breaking: a save with any other identifier is refused**, from the admin or from code
+    (`Model\Faq::beforeSave()`), with a message saying what is allowed. Uppercase is refused
+    too: the database compares identifiers without regard to case, so `Shipping` and `shipping`
+    were already one group, and their cache tags must agree.
+  - The FAQ form checks the rule as you type. The widget and the Page Builder element pick a group
+    from the groups that exist (under Changed).
+  - **Upgrading rewrites the identifiers the rule refuses**
+    (`Setup\Patch\Data\NormalizeFaqIdentifiers`). It lowercases them, decodes HTML entities,
+    turns each run of other characters into one `-`, and trims `-` from the ends:
+    `Shipping & Returns` becomes `shipping-returns`. One with nothing left becomes `group-` and
+    eight hex digits. Groups that come out alike become one. Each rewrite is logged to
+    `var/log/system.log` with the FAQ's id and both identifiers.
+  - **Content naming the old identifier keeps working.** Widgets, Page Builder elements (which
+    stored it with HTML entities) and settings are looked up through the same rewrite
+    (`Model\Faq\Identifier::normalize()`).
+  - **Re-check after upgrading:** a multi-select listing FAQ groups, such as MageOS_Aeo's llms.txt
+    *FAQ Groups*, shows a rewritten group as unselected. Reselect it there before saving that page
+    again; until then llms.txt still shows it. A widget or Page Builder element naming the old
+    identifier opens with no group picked, and asks for one before it saves; until then the
+    storefront still shows the group.
+- **The Page Builder element's heading refuses `%`**
+  ([#5](https://github.com/mage-os-lab/module-faq/issues/5)). Core's tokenizer URL-decodes a
+  widget directive's parameters once, so `%22` in a heading became a `"` after the form's check and
+  could end the value and set other parameters. `"`, `{`, `}` and `\` were already refused.
+
+### Added
+
+- **Mass actions in the FAQ grid: Delete, Enable and Disable** the entries selected, as on core's
+  CMS page grid. Each entry is loaded, saved or deleted through the repository, as from its edit
+  form, so the pages showing its group are purged and the feeds queue their rebuild the same way.
+  An entry that fails is named in an error message; the others still go ahead.
+
+### Changed
+
+- Requires MageOS_Seo `^2.0` (was `^1.2`). Seo's next release is 2.0.0, which changes the
+  classes this module uses into `Api` interfaces.
+  - `Block\AbstractFaqElement` (so `Block\Widget\FaqList`) and `Block\FaqJsonLd` take
+    `MageOS\Seo\Api\FaqSourcePoolInterface` where they took `MageOS\Seo\Model\Faq\SourcePool`,
+    and `Block\FaqJsonLd` takes `MageOS\Seo\Api\StorefrontSettingsInterface` where it took
+    `MageOS\Seo\Model\Config`. A subclass that overrides either constructor must follow.
+  - The table registers as a FAQ source on `FaqSourcePoolInterface` in `etc/di.xml`.
+- **The widget's and the Page Builder element's group is picked from a list** of the groups that
+  exist, from every FAQ source, labelled *FAQ Group*. It was typed, and a typo showed an empty FAQ
+  block with nothing saying why. The list starts with *-- Please Select --*: an element naming a
+  group that no longer exists opens with nothing picked rather than with another group, which a
+  save would have switched it to (`Model\Config\Source\Groups`).
+- **The FAQ Manager's permission is under Marketing → SEO**, where its menu item is, as core's
+  permissions sit under their menus. It was under a top-level SEO node beside Marketing and Stores.
+  The resource ID, `MageOS_Faq::faq`, is unchanged, so roles keep what they were granted.
+- **Four constructors take `Model\Faq\Identifier`**, the service that holds the identifier rule:
+  `Model\Faq`, `Block\AbstractFaqElement` (so `Block\Widget\FaqList`), `Block\FaqJsonLd` and
+  `Model\Faq\GroupReader`. None of them is `@api`, but a subclass that overrides one of these
+  constructors must now pass it. `Controller\Adminhtml\Faq\Save` takes `StoreManagerInterface`.
+- **The FAQ form's store is a selector**, with core's store options: All Store Views, then each
+  website, store and store view, as on the CMS page form. It was a number to type. The grid's
+  column shows the store's name and filters by it. Both are labelled "Store".
+- **Active is a switch, and on for a new FAQ**, matching the column's default. New FAQs saved
+  inactive unless it was ticked.
+- **Requires `magento/module-cms`** for those store options. It is part of every installation.
+- **The README says where the FAQ list can't be cached around**
+  ([#6](https://github.com/mage-os-lab/module-faq/issues/6)): inside a block that caches its own
+  HTML, the list doesn't run on a cache hit. The page gets no FAQPage JSON-LD and no group cache
+  tag, and shows old questions until that block's cache expires. Core's CMS blocks, widgets and
+  pages don't cache their HTML; a theme or custom block with a lifetime does. The README and two
+  docblocks claimed the JSON-LD stayed right under block cache.
+
+### Fixed
+
+- **The FAQ grid's keyword search finds the entries containing the words.** Core's keyword
+  filter matches against the table's fulltext index, and returns without filtering when there is
+  none, so every search showed every entry. The table has a fulltext index on question, answer and
+  identifier (`MAGEOS_FAQ_QUESTION_ANSWER_IDENTIFIER`), which `setup:upgrade` builds.
+- **One FAQ save no longer purges every cached page**
+  ([#3](https://github.com/mage-os-lab/module-faq/issues/3)). The FAQPage JSON-LD block is on
+  every page and gave each the bare `mageos_faq` tag, which every FAQ save purges. A page now
+  carries the tags of the groups it shows and nothing else, so a save purges the pages showing its
+  group (both groups, when it moves).
+- **A new FAQ whose save fails reopens with what was typed**
+  ([#7](https://github.com/mage-os-lab/module-faq/issues/7)). The input was kept under the key `0`,
+  where the form never looks for a new record, and then discarded.
+- **A store that no longer exists is refused in words.** The admin saw the database's foreign-key
+  error instead.
+- **The Page Builder FAQ element's preview renders once a group is set.** It labelled the group
+  with a translated "Group:", and core's template renderer wraps a value with a colon in braces,
+  which made the binding unparsable.
+- **A numeric group identifier renders its FAQPage JSON-LD**
+  ([#2](https://github.com/mage-os-lab/module-faq/issues/2)). The collector kept identifiers as
+  array keys, so PHP turned `"123"` into an int, and the JSON-LD block failed with a `TypeError`.
+
 ## [1.0.0] — 2026-10-05
 
 ### Added

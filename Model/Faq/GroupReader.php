@@ -19,17 +19,20 @@ class GroupReader
 {
     /**
      * @param CollectionFactory $collectionFactory
+     * @param Identifier $identifier
      */
     public function __construct(
-        private readonly CollectionFactory $collectionFactory
+        private readonly CollectionFactory $collectionFactory,
+        private readonly Identifier        $identifier
     ) {
     }
 
     /**
      * Return every FAQ group identifier in use, once each and sorted, across stores and states.
      *
-     * A collection always selects the ID column, so a DISTINCT select would not collapse the rows;
-     * they are deduplicated here instead. The FAQ table is small, and this serves admin option lists.
+     * Only the identifier column is selected (a single addFieldToSelect() replaces the select list,
+     * ID included), and the values are deduplicated here. The FAQ table is small, and this serves
+     * admin option lists.
      *
      * @return string[]
      */
@@ -47,12 +50,16 @@ class GroupReader
     /**
      * Return active FAQ entries for a group identifier and store, ordered by sort order.
      *
+     * The identifier is normalised first (Faq\Identifier::normalize()), so a group named in
+     * configuration or content from before identifiers were restricted is still found.
+     *
      * @param string $identifier
      * @param int $storeId
      * @return array<int, array{question: string, answer: string}>
      */
     public function getByIdentifier(string $identifier, int $storeId): array
     {
+        $identifier = $this->identifier->normalize($identifier);
         if ($identifier === '') {
             return [];
         }

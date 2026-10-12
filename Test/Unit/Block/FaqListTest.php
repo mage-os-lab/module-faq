@@ -9,7 +9,8 @@ use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use MageOS\Faq\Api\FaqCollectorInterface;
 use MageOS\Faq\Block\Widget\FaqList;
-use MageOS\Seo\Model\Faq\SourcePool;
+use MageOS\Faq\Model\Faq\Identifier;
+use MageOS\Seo\Api\FaqSourcePoolInterface;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
@@ -19,9 +20,9 @@ use PHPUnit\Framework\TestCase;
 class FaqListTest extends TestCase
 {
     /**
-     * @var SourcePool&Stub
+     * @var FaqSourcePoolInterface&Stub
      */
-    private SourcePool&Stub $sourcePool;
+    private FaqSourcePoolInterface&Stub $sourcePool;
 
     /**
      * @var FaqCollectorInterface&Stub
@@ -35,7 +36,7 @@ class FaqListTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->sourcePool = $this->createStub(SourcePool::class);
+        $this->sourcePool = $this->createStub(FaqSourcePoolInterface::class);
         $this->collector  = $this->createStub(FaqCollectorInterface::class);
 
         $this->storeManager = $this->createStub(StoreManagerInterface::class);
@@ -47,17 +48,20 @@ class FaqListTest extends TestCase
     /**
      * The widget under test, over the given doubles or this test's stubs.
      *
-     * @param SourcePool|null $sourcePool
+     * @param FaqSourcePoolInterface|null $sourcePool
      * @param FaqCollectorInterface|null $collector
      * @return FaqList
      */
-    private function block(?SourcePool $sourcePool = null, ?FaqCollectorInterface $collector = null): FaqList
-    {
+    private function block(
+        ?FaqSourcePoolInterface $sourcePool = null,
+        ?FaqCollectorInterface $collector = null
+    ): FaqList {
         return new FaqList(
             $this->createStub(Context::class),
             $sourcePool ?? $this->sourcePool,
             $collector ?? $this->collector,
-            $this->storeManager
+            $this->storeManager,
+            new Identifier()
         );
     }
 
@@ -66,7 +70,7 @@ class FaqListTest extends TestCase
         $faqs = [['question' => 'Q', 'answer' => 'A']];
         $collector = $this->createMock(FaqCollectorInterface::class);
         $collector->expects($this->once())->method('collect')->with('shipping');
-        $sourcePool = $this->createMock(SourcePool::class);
+        $sourcePool = $this->createMock(FaqSourcePoolInterface::class);
         $sourcePool->method('getFaqs')->with('shipping', 1)->willReturn($faqs);
         $block = $this->block($sourcePool, $collector);
         $block->setData('identifier', 'shipping');
@@ -85,7 +89,7 @@ class FaqListTest extends TestCase
 
     public function testResolutionIsMemoised(): void
     {
-        $sourcePool = $this->createMock(SourcePool::class);
+        $sourcePool = $this->createMock(FaqSourcePoolInterface::class);
         $sourcePool->expects($this->once())->method('getFaqs')->willReturn([
             ['question' => 'Q', 'answer' => 'A'],
         ]);

@@ -32,7 +32,8 @@ class Collector implements FaqCollectorInterface, ResetAfterRequestInterface
      */
     public function getIdentifiers(): array
     {
-        return array_keys($this->identifiers);
+        // PHP turns a numeric-string array key into an int; give "123" back as the string it was.
+        return array_map('strval', array_keys($this->identifiers));
     }
 
     /**

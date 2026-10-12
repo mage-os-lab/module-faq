@@ -6,6 +6,7 @@ namespace MageOS\Faq\Test\Unit\Model\Faq;
 
 use MageOS\Faq\Model\Faq;
 use MageOS\Faq\Model\Faq\GroupReader;
+use MageOS\Faq\Model\Faq\Identifier;
 use MageOS\Faq\Model\ResourceModel\Faq\Collection;
 use MageOS\Faq\Model\ResourceModel\Faq\CollectionFactory;
 use PHPUnit\Framework\Attributes\Group;
@@ -116,7 +117,7 @@ class GroupReaderTest extends TestCase
             }
         );
 
-        return new GroupReader($collectionFactory);
+        return new GroupReader($collectionFactory, new Identifier());
     }
 
     /**

@@ -15,7 +15,7 @@
         This module's table is one FAQ source among any others in MageOS_Seo's pool, which the
         structured data and the llms documents read.
     -->
-    <type name="MageOS\Seo\Model\Faq\SourcePool">
+    <type name="MageOS\Seo\Api\FaqSourcePoolInterface">
         <arguments>
             <argument name="sources" xsi:type="array">
                 <item name="table"

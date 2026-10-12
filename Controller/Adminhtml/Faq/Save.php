@@ -11,6 +11,7 @@ use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Model\StoreManagerInterface;
 use MageOS\Faq\Api\Data\FaqInterface;
 use MageOS\Faq\Api\FaqRepositoryInterface;
 use MageOS\Faq\Model\FaqFactory;
@@ -24,12 +25,14 @@ class Save extends Action implements HttpPostActionInterface
      * @param FaqRepositoryInterface $faqRepository
      * @param FaqFactory $faqFactory
      * @param DataPersistorInterface $dataPersistor
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         Context                                 $context,
         private readonly FaqRepositoryInterface $faqRepository,
         private readonly FaqFactory             $faqFactory,
-        private readonly DataPersistorInterface $dataPersistor
+        private readonly DataPersistorInterface $dataPersistor,
+        private readonly StoreManagerInterface  $storeManager
     ) {
         parent::__construct($context);
     }
@@ -82,7 +85,7 @@ class Save extends Action implements HttpPostActionInterface
      *
      * @param FaqInterface $faq
      * @param mixed[] $data
-     * @throws LocalizedException When a required field is empty
+     * @throws LocalizedException When a required field is empty, or the store does not exist
      * @return void
      */
     private function populate(FaqInterface $faq, array $data): void
@@ -95,8 +98,17 @@ class Save extends Action implements HttpPostActionInterface
             throw new LocalizedException(__('Identifier, question and answer are required.'));
         }
 
+        // The form only offers existing stores, but one can be deleted while the form is open. The
+        // foreign key would refuse it too, with the database's error as the admin's message.
+        $storeId = max(0, (int) ($data['store_id'] ?? 0));
+        if (!isset($this->storeManager->getStores(true)[$storeId])) {
+            throw new LocalizedException(
+                __('The selected store no longer exists. Choose another and save again.')
+            );
+        }
+
         $faq->setIdentifier($identifier);
-        $faq->setStoreId(max(0, (int) ($data['store_id'] ?? 0)));
+        $faq->setStoreId($storeId);
         $faq->setQuestion($question);
         $faq->setAnswer($answer);
         $faq->setSortOrder((int) ($data['sort_order'] ?? 0));

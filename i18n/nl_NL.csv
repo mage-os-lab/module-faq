@@ -11,6 +11,8 @@ Save,Opslaan
 "SEO — FAQ Manager","SEO — FAQ-beheer"
 "The FAQ entry has been saved.","De FAQ is opgeslagen."
 "Identifier, question and answer are required.","Identificatie, vraag en antwoord zijn verplicht."
+"The selected store no longer exists. Choose another and save again.","De gekozen winkel bestaat niet meer. Kies een andere en sla opnieuw op."
+"The FAQ group identifier can only contain lowercase letters, digits, - and _, up to 128 characters.","De FAQ-groepsidentificatie mag alleen kleine letters, cijfers, - en _ bevatten, tot 128 tekens."
 "FAQ with id ""%1"" does not exist.","FAQ met id ""%1"" bestaat niet."
 "FAQ model must extend AbstractModel.","Het FAQ-model moet AbstractModel uitbreiden."
 "Could not save the FAQ: %1","De FAQ kon niet worden opgeslagen: %1"
@@ -18,26 +20,34 @@ Save,Opslaan
 Edit,Bewerken
 "Delete FAQ","FAQ verwijderen"
 FAQ,FAQ
-Group:,Groep:
+Group,Groep
 "Open settings to choose a FAQ group identifier.","Open de instellingen om een FAQ-groepsidentificatie te kiezen."
 "Leave out %1: the FAQ widget directive cannot carry them.","Laat %1 weg: de FAQ-widgetinstructie kan ze niet bevatten."
+"Use lowercase letters (a-z), digits (0-9), hyphens (-) and underscores (_) only, up to 128 characters.","Gebruik alleen kleine letters (a-z), cijfers (0-9), koppeltekens (-) en underscores (_), tot 128 tekens."
 "FAQ Manager",FAQ-beheer
 "SEO FAQ List","SEO FAQ-lijst"
 "Renders a FAQ group as an accordion and adds matching FAQPage structured data.","Toont een FAQ-groep als accordeon en voegt bijbehorende gestructureerde gegevens (FAQPage) toe."
-"FAQ Group Identifier",FAQ-groepsidentificatie
-"The group identifier of the FAQ entries to display (e.g. shipping, returns).","De groepsidentificatie van de FAQ's die je wilt tonen (bijv. shipping, returns)."
+"FAQ Group",FAQ-groep
+"The group of FAQ entries to display.","De groep FAQ's die je wilt tonen."
+"-- Please Select --","-- Selecteer --"
 "Heading (optional)","Kop (optioneel)"
 "Optional heading rendered above the FAQ list.","Optionele kop boven de FAQ-lijst."
 "FAQ Entry",FAQ-item
 "Group Identifier",Groepsidentificatie
-"Reference this group from the FAQ widget or Page Builder. Groups selected under Stores → Configuration → MageOS SEO → AI Information & Crawlers → AI Discoverability (llms.txt) also appear in llms.txt.","Verwijs naar deze groep vanuit de FAQ-widget of Page Builder. Groepen die zijn geselecteerd onder Winkels → Configuratie → MageOS SEO → AI-informatie & crawlers → AI-vindbaarheid (llms.txt) staan ook in llms.txt."
-"Store View ID",Winkelweergave-ID
-"0 = all store views.","0 = alle winkelweergaven."
+"Lowercase letters, digits, hyphens and underscores only, e.g. shipping-returns. Reference this group from the FAQ widget or Page Builder. Groups selected under Stores → Configuration → MageOS SEO → AI Information & Crawlers → AI Discoverability (llms.txt) also appear in llms.txt.","Alleen kleine letters, cijfers, koppeltekens en underscores, bijv. shipping-returns. Verwijs naar deze groep vanuit de FAQ-widget of Page Builder. Groepen die zijn geselecteerd onder Winkels → Configuratie → MageOS SEO → AI-informatie & crawlers → AI-vindbaarheid (llms.txt) staan ook in llms.txt."
+Store,Winkel
 Question,Vraag
 Answer,Antwoord
 "Sort Order",Sorteervolgorde
 Active,Actief
 ID,ID
+"Are you sure you want to delete selected items?","Weet je zeker dat je de geselecteerde items wilt verwijderen?"
+"Delete items","Items verwijderen"
+Disable,Uitschakelen
+Enable,Inschakelen
+"FAQ entry %1: %2","FAQ %1: %2"
+"FAQ entries deleted: %1.","FAQ's verwijderd: %1."
+"FAQ entries enabled: %1.","FAQ's ingeschakeld: %1."
+"FAQ entries disabled: %1.","FAQ's uitgeschakeld: %1."
 "FAQ Settings",FAQ-instellingen
-"The group identifier of the FAQ entries to display (e.g. shipping). Can't contain "" { } or \.","De groepsidentificatie van de FAQ's die je wilt tonen (bijv. shipping). Mag geen "" { } of \ bevatten."
-"Shown above the questions. Can't contain "" { } or \, which the widget directive Page Builder stores cannot carry.","Staat boven de vragen. Mag geen "" { } of \ bevatten: de widgetinstructie die Page Builder opslaat, kan die niet bevatten."
+"Shown above the questions. Can't contain "" { } \ or %, which the widget directive Page Builder stores cannot carry.","Staat boven de vragen. Mag geen "" { } \ of % bevatten: de widgetinstructie die Page Builder opslaat, kan die niet bevatten."

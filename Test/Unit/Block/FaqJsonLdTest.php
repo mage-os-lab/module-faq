@@ -9,8 +9,9 @@ use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use MageOS\Faq\Api\FaqCollectorInterface;
 use MageOS\Faq\Block\FaqJsonLd;
-use MageOS\Seo\Model\Config;
-use MageOS\Seo\Model\Faq\SourcePool;
+use MageOS\Faq\Model\Faq\Identifier;
+use MageOS\Seo\Api\FaqSourcePoolInterface;
+use MageOS\Seo\Api\StorefrontSettingsInterface;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
@@ -22,14 +23,14 @@ class FaqJsonLdTest extends TestCase
     private FaqCollectorInterface&Stub $collector;
 
     /**
-     * @var SourcePool&Stub
+     * @var FaqSourcePoolInterface&Stub
      */
-    private SourcePool&Stub $sourcePool;
+    private FaqSourcePoolInterface&Stub $sourcePool;
 
     /**
-     * @var Config&Stub
+     * @var StorefrontSettingsInterface&Stub
      */
-    private Config&Stub $config;
+    private StorefrontSettingsInterface&Stub $config;
 
     /**
      * @var FaqJsonLd
@@ -39,8 +40,8 @@ class FaqJsonLdTest extends TestCase
     protected function setUp(): void
     {
         $this->collector  = $this->createStub(FaqCollectorInterface::class);
-        $this->sourcePool = $this->createStub(SourcePool::class);
-        $this->config     = $this->createStub(Config::class);
+        $this->sourcePool = $this->createStub(FaqSourcePoolInterface::class);
+        $this->config     = $this->createStub(StorefrontSettingsInterface::class);
 
         $storeManager = $this->createStub(StoreManagerInterface::class);
         $store        = $this->createStub(StoreInterface::class);
@@ -52,7 +53,8 @@ class FaqJsonLdTest extends TestCase
             $this->collector,
             $this->sourcePool,
             $storeManager,
-            $this->config
+            $this->config,
+            new Identifier()
         );
     }
 
@@ -67,6 +69,22 @@ class FaqJsonLdTest extends TestCase
         $this->config->method('isStructuredDataEnabled')->willReturn(true);
         $this->collector->method('getIdentifiers')->willReturn([]);
         $this->assertSame('', $this->block->getJsonLd());
+    }
+
+    public function testAPageWithoutFaqsCarriesNoFaqTag(): void
+    {
+        // Issue #3: the block is on every page, and its bare mageos_faq tag made one FAQ edit purge
+        // every cached page.
+        $this->collector->method('getIdentifiers')->willReturn([]);
+
+        $this->assertSame([], $this->block->getIdentities());
+    }
+
+    public function testAPageCarriesTheTagsOfTheGroupsItShowsOnly(): void
+    {
+        $this->collector->method('getIdentifiers')->willReturn(['shipping', 'returns']);
+
+        $this->assertSame(['mageos_faq_group_shipping', 'mageos_faq_group_returns'], $this->block->getIdentities());
     }
 
     public function testEmptyWhenNoFaqsResolved(): void

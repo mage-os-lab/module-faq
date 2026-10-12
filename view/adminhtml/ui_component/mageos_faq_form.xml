@@ -61,18 +61,33 @@
                 <label translate="true">Group Identifier</label>
                 <dataType>text</dataType>
                 <notice
-                translate="true">Reference this group from the FAQ widget or Page Builder. Groups selected under Stores → Configuration → MageOS SEO → AI Information &amp; Crawlers → AI Discoverability (llms.txt) also appear in llms.txt.</notice>
-                <validation><rule name="required-entry" xsi:type="boolean">true</rule></validation>
+                translate="true">Lowercase letters, digits, hyphens and underscores only, e.g. shipping-returns. Reference this group from the FAQ widget or Page Builder. Groups selected under Stores → Configuration → MageOS SEO → AI Information &amp; Crawlers → AI Discoverability (llms.txt) also appear in llms.txt.</notice>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                    <rule name="mageos-faq-identifier" xsi:type="boolean">true</rule>
+                </validation>
             </settings>
         </field>
 
-        <field name="store_id" sortOrder="20" formElement="input">
+        <!-- Core's store options, as on the CMS page form: All Store Views (0), then each store. -->
+        <field name="store_id" sortOrder="20" formElement="select">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="default" xsi:type="number">0</item>
+                </item>
+            </argument>
             <settings>
-                <label translate="true">Store View ID</label>
-                <dataType>text</dataType>
-                <notice translate="true">0 = all store views.</notice>
-                <validation><rule name="validate-digits" xsi:type="boolean">true</rule></validation>
+                <label translate="true">Store</label>
+                <dataType>int</dataType>
+                <validation><rule name="required-entry" xsi:type="boolean">true</rule></validation>
             </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="Magento\Cms\Ui\Component\Listing\Column\Cms\Options"/>
+                    </settings>
+                </select>
+            </formElements>
         </field>
 
         <field name="question" sortOrder="30" formElement="input">
@@ -99,7 +114,13 @@
             </settings>
         </field>
 
+        <!-- A switch, on for a new FAQ (the column's default), as core's Enable Page. -->
         <field name="is_active" sortOrder="60" formElement="checkbox">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="default" xsi:type="number">1</item>
+                </item>
+            </argument>
             <settings>
                 <label translate="true">Active</label>
                 <dataType>boolean</dataType>
@@ -111,6 +132,7 @@
                             <map name="false" xsi:type="number">0</map>
                             <map name="true" xsi:type="number">1</map>
                         </valueMap>
+                        <prefer>toggle</prefer>
                     </settings>
                 </checkbox>
             </formElements>

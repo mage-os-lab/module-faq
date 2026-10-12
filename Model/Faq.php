@@ -4,10 +4,18 @@ declare(strict_types=1);
 
 namespace MageOS\Faq\Model;
 
+use Magento\Framework\Api\AttributeValueFactory;
+use Magento\Framework\Api\ExtensionAttributesFactory;
+use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DataObject\IdentityInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractExtensibleModel;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
 use MageOS\Faq\Api\Data\FaqExtensionInterface;
 use MageOS\Faq\Api\Data\FaqInterface;
+use MageOS\Faq\Model\Faq\Identifier;
 use MageOS\Faq\Model\ResourceModel\Faq as FaqResource;
 
 class Faq extends AbstractExtensibleModel implements FaqInterface, IdentityInterface
@@ -33,6 +41,37 @@ class Faq extends AbstractExtensibleModel implements FaqInterface, IdentityInter
     protected $_eventObject = 'faq';
 
     /**
+     * @param Context $context
+     * @param Registry $registry
+     * @param ExtensionAttributesFactory $extensionFactory
+     * @param AttributeValueFactory $customAttributeFactory
+     * @param Identifier $identifier
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null $resourceCollection
+     * @param mixed[] $data
+     */
+    public function __construct(
+        Context                     $context,
+        Registry                    $registry,
+        ExtensionAttributesFactory  $extensionFactory,
+        AttributeValueFactory       $customAttributeFactory,
+        private readonly Identifier $identifier,
+        ?AbstractResource           $resource = null,
+        ?AbstractDb                 $resourceCollection = null,
+        array                       $data = []
+    ) {
+        parent::__construct(
+            $context,
+            $registry,
+            $extensionFactory,
+            $customAttributeFactory,
+            $resource,
+            $resourceCollection,
+            $data
+        );
+    }
+
+    /**
      * Initialize resource model.
      *
      * @return void
@@ -48,16 +87,39 @@ class Faq extends AbstractExtensibleModel implements FaqInterface, IdentityInter
     public function getIdentities(): array
     {
         $identities = [self::CACHE_TAG];
-        if ($this->getIdentifier() !== '') {
-            $identities[] = self::CACHE_TAG . '_group_' . $this->getIdentifier();
+        $tag        = $this->identifier->tag($this->getIdentifier());
+        if ($tag !== null) {
+            $identities[] = $tag;
         }
         // When the group identifier changes, pages caching the old group need purging too.
         $origIdentifier = (string) $this->getOrigData(self::IDENTIFIER);
-        if ($origIdentifier !== '' && $origIdentifier !== $this->getIdentifier()) {
-            $identities[] = self::CACHE_TAG . '_group_' . $origIdentifier;
+        $origTag        = $this->identifier->tag($origIdentifier);
+        if ($origTag !== null && $origIdentifier !== $this->getIdentifier()) {
+            $identities[] = $origTag;
         }
 
         return $identities;
+    }
+
+    /**
+     * Refuse a group identifier outside lowercase letters, digits, - and _ (Faq\Identifier).
+     *
+     * Here rather than in the admin controller, so it holds however a FAQ is saved: the admin, the
+     * repository, a data patch or an import.
+     *
+     * @throws LocalizedException
+     * @return $this
+     */
+    public function beforeSave()
+    {
+        if (!$this->identifier->isValid($this->getIdentifier())) {
+            throw new LocalizedException(__(
+                'The FAQ group identifier can only contain lowercase letters, digits, - and _, up to 128'
+                . ' characters.'
+            ));
+        }
+
+        return parent::beforeSave();
     }
 
     /**

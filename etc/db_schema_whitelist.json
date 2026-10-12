@@ -12,7 +12,8 @@
         },
         "index": {
             "MAGEOS_FAQ_IDENTIFIER_STORE_ID": true,
-            "MAGEOS_FAQ_STORE_ID": true
+            "MAGEOS_FAQ_STORE_ID": true,
+            "MAGEOS_FAQ_QUESTION_ANSWER_IDENTIFIER": true
         },
         "constraint": {
             "PRIMARY": true,
